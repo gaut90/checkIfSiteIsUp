@@ -16,23 +16,17 @@ jobs:
           RESPONSE=$(curl -s https://www.usvisascheduling.com/)
           TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
           if echo "$RESPONSE" | grep -q "Atlas360-MMode.png"; then
-            echo "site_status=DOWN at $TIMESTAMP" >> site_status.txt
+            echo "SITE_STATUS=DOWN at $TIMESTAMP" >> $GITHUB_ENV
           else
-            echo "site_status=UP at $TIMESTAMP" >> site_status.txt
-
-      - name: Set site status output
-        id: status
-        run: |
-          STATUS=$(cat site_status.txt)
-          echo "site_status=$STATUS" >> $GITHUB_OUTPUT
+            echo "SITE_STATUS=UP at $TIMESTAMP" >> $GITHUB_ENV
 
       - name: Send Email
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
-          username: gaut90@gmail.com
+          username: your-email@gmail.com
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "US Visa Site Status"
-          body: "The US Visa scheduling site status is: ${{ steps.status.outputs.site_status }}. URL: https://www.usvisascheduling.com/"
-          to: gaut90@gmail.com
+          body: "The US Visa scheduling site status is: ${{ env.SITE_STATUS }}. URL: https://www.usvisascheduling.com/"
+          to: your-email@gmail.com
