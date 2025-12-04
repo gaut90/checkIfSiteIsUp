@@ -2,7 +2,7 @@ name: Check US Visa Site
 
 on:
   schedule:
-    - cron: "*/5 * * * *"   # every 5 minutes
+    - cron: "*/5 * * * *"    # every 5 minutes
   workflow_dispatch:
 
 jobs:
@@ -19,6 +19,7 @@ jobs:
             echo "SITE_STATUS=DOWN at $TIMESTAMP" >> $GITHUB_ENV
           else
             echo "SITE_STATUS=UP at $TIMESTAMP" >> $GITHUB_ENV
+          fi # <--- This fixes the "unexpected end of file" error
 
       - name: Send Email
         uses: dawidd6/action-send-mail@v3
